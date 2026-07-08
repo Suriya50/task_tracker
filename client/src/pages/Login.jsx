@@ -49,6 +49,7 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3">
+            {/* Email */}
             <div>
               <label className="block text-[10px] font-medium text-gray-300 mb-0.5">Email</label>
               <div className="relative">
@@ -64,6 +65,7 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Password */}
             <div>
               <label className="block text-[10px] font-medium text-gray-300 mb-0.5">Password</label>
               <div className="relative">
@@ -86,6 +88,7 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Submit */}
             <button type="submit" disabled={isLoading} className="btn-primary text-xs py-2">
               {isLoading ? 'Loading...' : 'Login'}
             </button>

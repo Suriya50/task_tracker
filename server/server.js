@@ -7,9 +7,26 @@ const socketHandler = require('./socket/socketHandler');
 connectDB();
 
 const server = http.createServer(app);
+
+// ─── ALLOWED ORIGINS FOR SOCKET.IO ───
+const allowedOrigins = [
+  'http://localhost:5173',                           // Vite default
+  'http://localhost:5174',                           // Additional port
+  'http://localhost:5175',                           // Additional port
+  process.env.FRONTEND_URL,                          // Production frontend
+].filter(Boolean);  // Remove any undefined values
+
 const io = socketIO(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, Postman, curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS not allowed for Socket.IO from origin: ${origin}`));
+      }
+    },
     methods: ['GET', 'POST'],
     credentials: true,
   },

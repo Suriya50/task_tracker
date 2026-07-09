@@ -50,8 +50,15 @@ const Navbar = () => {
             onClick={() => setShowDropdown(!showDropdown)}
             className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/5 transition-colors"
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-sm font-bold">
-              {user?.name?.charAt(0) || 'U'}
+            {/* ─── AVATAR ─── */}
+            <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+              {user?.profilePicture ? (
+                <img src={user.profilePicture} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-sm font-bold">
+                  {user?.name?.charAt(0) || 'U'}
+                </div>
+              )}
             </div>
             <ChevronDownIcon className="w-4 h-4 text-gray-400 hidden sm:block" />
           </button>

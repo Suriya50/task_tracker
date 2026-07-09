@@ -6,7 +6,7 @@ import Sidebar from '../components/common/Sidebar';
 import Navbar from '../components/common/Navbar';
 import toast from 'react-hot-toast';
 import api from '../services/api';
-import { logout } from '../redux/slices/authSlice';
+import { logout, updateUser } from '../redux/slices/authSlice';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -18,6 +18,7 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState('');
   const [preview, setPreview] = useState(user?.profilePicture || 'https://ui-avatars.com/api/?background=6366f1&color=fff&size=100');
 
+  // ─── AVATAR UPLOAD ───
   const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -38,7 +39,12 @@ const Profile = () => {
       const res = await api.post('/users/avatar', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setPreview(res.data.data.profilePicture);
+      const newAvatarUrl = res.data.data.profilePicture;
+      setPreview(newAvatarUrl);
+
+      // ✅ Update Redux state and localStorage
+      dispatch(updateUser({ profilePicture: newAvatarUrl }));
+
       toast.success('Avatar updated!');
     } catch (err) {
       console.error('Upload error:', err);
@@ -46,16 +52,20 @@ const Profile = () => {
     }
   };
 
+  // ─── UPDATE PROFILE ───
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
       await api.put('/users/profile', { name, email });
+      // Update Redux with new name/email
+      dispatch(updateUser({ name, email }));
       toast.success('Profile updated');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Update failed');
     }
   };
 
+  // ─── CHANGE PASSWORD ───
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (!currentPassword || !newPassword) return toast.error('Fill all fields');
@@ -69,6 +79,7 @@ const Profile = () => {
     }
   };
 
+  // ─── LOGOUT ───
   const handleLogout = async () => {
     await dispatch(logout());
     navigate('/login');
@@ -83,6 +94,7 @@ const Profile = () => {
         <main className="p-4 md:p-6 lg:p-8 max-w-lg mx-auto">
           <h1 className="text-xl font-bold text-white mb-4">Profile</h1>
 
+          {/* Avatar */}
           <div className="glass-card rounded-2xl p-5 mb-5 flex flex-col items-center">
             <div className="relative w-20 h-20 sm:w-24 sm:h-24">
               <img src={preview} alt="Avatar" className="w-full h-full rounded-full object-cover border-2 border-primary/30" />
@@ -95,6 +107,7 @@ const Profile = () => {
             <p className="text-gray-400 text-xs">{user?.role}</p>
           </div>
 
+          {/* Update Profile */}
           <div className="glass-card rounded-2xl p-5 mb-5">
             <h2 className="text-sm font-semibold text-white mb-3">Update Profile</h2>
             <form onSubmit={handleUpdateProfile} className="space-y-3">
@@ -110,6 +123,7 @@ const Profile = () => {
             </form>
           </div>
 
+          {/* Change Password */}
           <div className="glass-card rounded-2xl p-5 mb-5">
             <h2 className="text-sm font-semibold text-white mb-3">Change Password</h2>
             <form onSubmit={handleChangePassword} className="space-y-3">
@@ -125,6 +139,7 @@ const Profile = () => {
             </form>
           </div>
 
+          {/* Logout */}
           <div className="glass-card rounded-2xl p-5 border border-red-500/20">
             <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition text-xs">
               <ArrowRightOnRectangleIcon className="w-4 h-4" />

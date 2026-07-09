@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   HomeIcon,
   FolderIcon,
@@ -10,11 +10,15 @@ import {
   CalendarIcon,
   DocumentTextIcon,
   UserCircleIcon,
+  ArrowRightOnRectangleIcon,
   Bars3Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { logout } from '../../redux/slices/authSlice'; // ✅ Correct path
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -30,6 +34,11 @@ const Sidebar = () => {
   ];
 
   const filteredNav = navigation.filter(item => item.roles.includes(user?.role || 'Employee'));
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    navigate('/login');
+  };
 
   return (
     <>
@@ -62,10 +71,17 @@ const Sidebar = () => {
             </span>
           </div>
 
+          {/* User Profile with Avatar */}
           <div className="px-6 py-4 border-b border-white/5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">
-                {user?.name?.charAt(0) || 'U'}
+              <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                {user?.profilePicture ? (
+                  <img src={user.profilePicture} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">
+                    {user?.name?.charAt(0) || 'U'}
+                  </div>
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-white font-medium truncate">{user?.name}</p>
@@ -94,9 +110,13 @@ const Sidebar = () => {
           </nav>
 
           <div className="p-4 border-t border-white/5">
-            <div className="text-xs text-gray-500 text-center">
-              {user?.company?.name || user?.company || 'No Company'}
-            </div>
+            <button
+              onClick={handleLogout}
+              className="sidebar-item w-full text-red-400 hover:text-red-300 hover:bg-red-500/10"
+            >
+              <ArrowRightOnRectangleIcon className="w-5 h-5" />
+              <span>Logout</span>
+            </button>
           </div>
         </div>
       </aside>

@@ -58,39 +58,34 @@ const initialState = {
 const projectSlice = createSlice({
   name: 'projects',
   initialState,
-  reducers: {
-    clearProjectError: (state) => {
-      state.error = null;
-    },
-  },
+  reducers: { clearProjectError: (state) => { state.error = null; } },
   extraReducers: (builder) => {
     builder
-      .addCase(getProjects.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      .addCase(getProjects.pending, (state) => { state.loading = true; state.error = null; })
       .addCase(getProjects.fulfilled, (state, action) => {
         state.loading = false;
         state.projects = Array.isArray(action.payload) ? action.payload : [];
-        state.error = null;
       })
       .addCase(getProjects.rejected, (state, action) => {
         state.loading = false;
         state.projects = [];
         state.error = action.payload;
       })
+      .addCase(createProject.pending, (state) => { state.loading = true; state.error = null; })
       .addCase(createProject.fulfilled, (state, action) => {
-        state.projects.push(action.payload);
-        state.error = null;
+        state.loading = false;
+        state.projects.unshift(action.payload);
+      })
+      .addCase(createProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(updateProject.fulfilled, (state, action) => {
         const index = state.projects.findIndex(p => p._id === action.payload._id);
         if (index !== -1) state.projects[index] = action.payload;
-        state.error = null;
       })
       .addCase(deleteProject.fulfilled, (state, action) => {
         state.projects = state.projects.filter(p => p._id !== action.payload);
-        state.error = null;
       });
   },
 });

@@ -81,46 +81,53 @@ const Dashboard = () => {
       <Sidebar />
       <div className="flex-1 ml-0 lg:ml-64">
         <Navbar />
-        <main className="p-4 md:p-6 lg:p-8 pt-4">
-          <div className="mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-white">
+        <main className="p-3 sm:p-4 md:p-6 lg:p-8 pt-3 sm:pt-4">
+          
+          {/* ─── WELCOME HEADER ─── */}
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
               Welcome back, {user?.name?.split(' ')[0] || 'User'} 👋
             </h1>
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-gray-400 text-xs sm:text-sm mt-0.5 sm:mt-1">
               {isAdmin && 'Company-wide overview and management'}
               {isManager && 'Manage your team and projects'}
               {isEmployee && 'Your personal workspace'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-            {stats.map((stat, i) => <StatsCard key={i} {...stat} />)}
+          {/* ─── STATS CARDS ─── */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
+            {stats.map((stat, i) => (
+              <StatsCard key={i} {...stat} />
+            ))}
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <Link to="/projects" className="glass-card-hover rounded-2xl p-4 text-center">
-              <PlusIcon className="w-8 h-8 text-primary mx-auto mb-2" />
-              <p className="text-white text-sm font-medium">New Project</p>
+          {/* ─── QUICK ACTIONS ─── */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
+            <Link to="/projects" className="glass-card-hover rounded-2xl p-3 sm:p-4 text-center transition-all duration-300 hover:scale-[1.02]">
+              <PlusIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary mx-auto mb-1 sm:mb-2" />
+              <p className="text-white text-xs sm:text-sm font-medium">New Project</p>
             </Link>
-            <Link to="/tasks" className="glass-card-hover rounded-2xl p-4 text-center">
-              <ClipboardDocumentListIcon className="w-8 h-8 text-primary mx-auto mb-2" />
-              <p className="text-white text-sm font-medium">New Task</p>
+            <Link to="/tasks" className="glass-card-hover rounded-2xl p-3 sm:p-4 text-center transition-all duration-300 hover:scale-[1.02]">
+              <ClipboardDocumentListIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary mx-auto mb-1 sm:mb-2" />
+              <p className="text-white text-xs sm:text-sm font-medium">New Task</p>
             </Link>
-            <Link to="/employees" className="glass-card-hover rounded-2xl p-4 text-center">
-              <UserPlusIcon className="w-8 h-8 text-primary mx-auto mb-2" />
-              <p className="text-white text-sm font-medium">Add Employee</p>
+            <Link to="/employees" className="glass-card-hover rounded-2xl p-3 sm:p-4 text-center transition-all duration-300 hover:scale-[1.02]">
+              <UserPlusIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary mx-auto mb-1 sm:mb-2" />
+              <p className="text-white text-xs sm:text-sm font-medium">Add Employee</p>
             </Link>
-            <Link to="/meetings" className="glass-card-hover rounded-2xl p-4 text-center">
-              <CalendarIcon className="w-8 h-8 text-primary mx-auto mb-2" />
-              <p className="text-white text-sm font-medium">Schedule Meeting</p>
+            <Link to="/meetings" className="glass-card-hover rounded-2xl p-3 sm:p-4 text-center transition-all duration-300 hover:scale-[1.02]">
+              <CalendarIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary mx-auto mb-1 sm:mb-2" />
+              <p className="text-white text-xs sm:text-sm font-medium">Schedule Meeting</p>
             </Link>
           </div>
 
-          {/* Activities & Reports */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="glass-card rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Recent Activities</h3>
+          {/* ─── ACTIVITIES & REPORTS ─── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            
+            {/* Recent Activities */}
+            <div className="glass-card rounded-2xl p-4 sm:p-5 md:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Recent Activities</h3>
               <div className="space-y-2">
                 {projects.slice(0, 3).map((p, i) => (
                   <ActivityItem
@@ -141,26 +148,28 @@ const Dashboard = () => {
                   />
                 ))}
                 {projects.length === 0 && tasks.length === 0 && (
-                  <p className="text-gray-400 text-sm text-center py-6">No recent activity</p>
+                  <p className="text-gray-400 text-sm text-center py-6 sm:py-8">No recent activity</p>
                 )}
               </div>
             </div>
 
-            <div className="glass-card rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
+            {/* Reports */}
+            <div className="glass-card rounded-2xl p-4 sm:p-5 md:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">
                 {isAdmin ? 'Company Reports' : isManager ? 'Team Reports' : 'My Reports'}
               </h3>
-              <div className="text-center py-12">
-                <DocumentTextIcon className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400 text-sm">No reports yet</p>
+              <div className="text-center py-8 sm:py-10 md:py-12">
+                <DocumentTextIcon className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-gray-600 mx-auto mb-3 sm:mb-4" />
+                <p className="text-gray-400 text-xs sm:text-sm">No reports yet</p>
                 {isEmployee && (
-                  <Link to="/reports" className="text-primary text-sm hover:text-secondary mt-2 inline-block">
+                  <Link to="/reports" className="text-primary text-xs sm:text-sm hover:text-secondary mt-2 inline-block transition-colors">
                     Submit Daily Report →
                   </Link>
                 )}
               </div>
             </div>
           </div>
+
         </main>
       </div>
     </div>

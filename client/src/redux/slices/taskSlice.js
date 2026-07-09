@@ -80,12 +80,18 @@ const taskSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(createTask.fulfilled, (state, action) => {
-        state.tasks.push(action.payload);
+        state.loading = false;
+        if (Array.isArray(state.tasks)) {
+          state.tasks.unshift(action.payload);
+        }
         state.error = null;
       })
       .addCase(updateTask.fulfilled, (state, action) => {
+        state.loading = false;
         const index = state.tasks.findIndex(t => t._id === action.payload._id);
-        if (index !== -1) state.tasks[index] = action.payload;
+        if (index !== -1) {
+          state.tasks[index] = action.payload;
+        }
         state.error = null;
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
